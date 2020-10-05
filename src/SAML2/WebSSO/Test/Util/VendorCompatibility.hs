@@ -38,7 +38,8 @@ testAuthRespApp ssoURI =
 
 vendorCompatibility :: HasCallStack => FilePath -> URI.URI -> Spec
 vendorCompatibility filePath ssoURI = testAuthRespApp ssoURI $ do
-  it filePath . runtest $ \ctx -> do
+  it filePath . runtest $ do
+    ctx <- getState
     authnrespRaw :: LT <- readSampleIO ("vendors/" <> filePath <> "-authnresp.xml")
     authnresp :: AuthnResponse <- either (error . show) pure $ decode authnrespRaw
     idpmeta :: IdPMetadata <-
