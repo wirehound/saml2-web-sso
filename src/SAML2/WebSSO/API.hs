@@ -127,7 +127,7 @@ instance FromMultipart Mem AuthnResponseBody where
       eval :: forall m err. SPStoreIdP (Error err) m => m AuthnResponse
       eval = do
         base64 <-
-          maybe (throwError BadSamlResponseFormFieldMissing) pure $
+          either (\_ -> throwError (BadSamlResponseFormFieldMissing "SAMLResponse")) pure $
             lookupInput "SAMLResponse" resp
         parseAuthnResponseBody base64
 

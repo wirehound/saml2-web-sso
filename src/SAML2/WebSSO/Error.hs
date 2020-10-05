@@ -13,7 +13,7 @@ data Error err
   | BadSamlResponseBase64Error LT
   | BadSamlResponseXmlError LT
   | BadSamlResponseSamlError LT
-  | BadSamlResponseFormFieldMissing
+  | BadSamlResponseFormFieldMissing String
   | BadSamlResponseIssuerMissing
   | BadSamlResponseNoAssertions
   | BadSamlResponseAssertionWithoutID
@@ -36,7 +36,7 @@ toServerError (Forbidden msg) = err403 {errBody = cs msg}
 toServerError (BadSamlResponseBase64Error msg) = err400 {errBody = "Bad response: base64 error: " <> cs msg}
 toServerError (BadSamlResponseXmlError msg) = err400 {errBody = "Bad response: xml parse error: " <> cs msg}
 toServerError (BadSamlResponseSamlError msg) = err400 {errBody = "Bad response: saml parse error: " <> cs msg}
-toServerError BadSamlResponseFormFieldMissing = err400 {errBody = "Bad response: SAMLResponse form field missing from HTTP body"}
+toServerError (BadSamlResponseFormFieldMissing _name) = err400 {errBody = "Bad response: SAMLResponse form field missing from HTTP body"}
 toServerError BadSamlResponseIssuerMissing = err400 {errBody = "Bad response: no Issuer in AuthnResponse"}
 toServerError BadSamlResponseNoAssertions = err400 {errBody = "Bad response: no assertions in AuthnResponse"}
 toServerError BadSamlResponseAssertionWithoutID = err400 {errBody = "Bad response: assertion without ID"}
